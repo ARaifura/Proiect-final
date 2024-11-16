@@ -1,3 +1,8 @@
-id,nume,prenume,email
-1,Ion,Popescu,ion.popescu@example.com
-2,Maria,Ionescu,maria.ionescu@example.com
+id,nume,prenume,email,icao24,departure_country,destination_country,duration_minutes
+1,Popescu,Mihai,mihai.popescu@gmail.com,4B6F8E,România,Germania,120
+2,Ionescu,Ion,ion.ionescu@gmail.com,3C4F30,Franța,Italia,90
+3,Popa,Adrian,adrian.popa@gmail.com,3D6A1A,Spania,Portugalia,150
+4,Andrei,Elena,elena.andrei@gmail.com,5D1F63,Polonia,Suedia,180
+5,Radu,Stefan,stefan.radu@gmail.com,4C3F92,Italia,Grecia,200
+
+
