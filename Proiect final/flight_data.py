@@ -23,7 +23,6 @@ def get_country_from_coordinates(latitude, longitude):
         print(f"Eroare la solicitarea către Nominatim: {e}")
         return "Eroare la obținerea țării"
 
-
 def get_flight_data(icao24):
     """Obține informații despre un zbor bazat pe numărul său ICAO 24."""
     url = "https://opensky-network.org/api/states/all"
@@ -42,9 +41,9 @@ def get_flight_data(icao24):
 
             # Verificăm coordonatele înainte de a solicita țara
             if latitude is not None and longitude is not None:
-                destination_country = get_country_from_coordinates(latitude, longitude)
+                over_country = get_country_from_coordinates(latitude, longitude)
             else:
-                destination_country = "Informație indisponibilă"
+                over_country = "Informație indisponibilă"
 
             flight_data = {
                 "callsign": state[1],  # Apelul avionului
@@ -53,7 +52,7 @@ def get_flight_data(icao24):
                 "altitude": state[7] if state[7] is not None else "Informație indisponibilă",  # Altitudinea
                 "latitude": latitude if latitude is not None else "Informație indisponibilă",  # Latitudinea
                 "longitude": longitude if longitude is not None else "Informație indisponibilă",  # Longitudinea
-                "destination_country": destination_country,
+                "over_country": over_country,
             }
             return flight_data
         else:
