@@ -2,7 +2,7 @@ from csv_utils import citeste_utilizatori_din_csv, scrie_utilizatori_in_csv
 
 
 def adauga_utilizator_in_csv(fisier_csv, id, nume, prenume, email, icao24, departure_country, destination_country,
-                             duration_minutes):
+                             duration_minutes,over_country):
     """Adauga un utilizator nou in fisierul CSV."""
     utilizatori = citeste_utilizatori_din_csv(fisier_csv)
 
@@ -14,7 +14,8 @@ def adauga_utilizator_in_csv(fisier_csv, id, nume, prenume, email, icao24, depar
         "icao24": icao24,
         "departure_country": departure_country,
         "destination_country": destination_country,
-        "duration_minutes": duration_minutes
+        "duration_minutes": duration_minutes,
+        "over_country": over_country
     }
 
     utilizatori.append(utilizator_nou)

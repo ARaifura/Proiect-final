@@ -1,26 +1,33 @@
 import csv
+import requests
 
 def citeste_utilizatori_din_csv(fisier_csv):
-    """Citeste utilizatori dintr-un fisier CSV si ii returneaza ca o lista de dictionare."""
     utilizatori = []
-    with open(fisier_csv, 'r') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            utilizatori.append(row)
+    try:
+        with open(fisier_csv, mode='r', newline='', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            utilizatori = [row for row in reader]
+    except FileNotFoundError:
+        print(f"Fișierul {fisier_csv} nu a fost găsit.")
     return utilizatori
 
+import csv
 def scrie_utilizatori_in_csv(fisier_csv, utilizatori):
-    """Scrie utilizatori în fișierul CSV."""
-    with open(fisier_csv, 'w', newline='') as csvfile:
-        # Actualizează fieldnames pentru a include 'over_country' în loc de 'destination_country'
-        fieldnames = ['id', 'nume', 'prenume', 'email', 'icao24', 'departure_country', 'over_country', 'duration_minutes']
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    # Include 'over_country' în lista de fieldnames
+    fieldnames = ["id", "nume", "prenume", "email", "icao24", "departure_country", "destination_country",
+                  "duration_minutes", "over_country"]
 
-        writer.writeheader()
-        writer.writerows(utilizatori)
+    with open(fisier_csv, mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()  # Scrie antetul
+        writer.writerows(utilizatori)  # Scrie toate liniile
 
-def adauga_utilizator_in_csv(fisier_csv, id, nume, prenume, email, icao24, departure_country, over_country, duration_minutes):
-    """Adauga un utilizator nou în fișierul CSV."""
+    # Extragem automat toate cheile din primul utilizator ca fieldnames
+    fieldnames = utilizatori[0].keys()
+
+
+
+def adauga_utilizator_in_csv(fisier_csv, id, nume, prenume, email, icao24, departure_country, destination_country, duration_minutes, over_country=''):
     utilizatori = citeste_utilizatori_din_csv(fisier_csv)
 
     utilizator_nou = {
@@ -30,13 +37,14 @@ def adauga_utilizator_in_csv(fisier_csv, id, nume, prenume, email, icao24, depar
         "email": email,
         "icao24": icao24,
         "departure_country": departure_country,
-        "over_country": over_country,  # Folosim 'over_country' în loc de 'destination_country'
-        "duration_minutes": duration_minutes
+        "destination_country": destination_country,
+        "duration_minutes": duration_minutes,
+        "over_country": over_country  # Asigură-te că acest câmp există
     }
 
     utilizatori.append(utilizator_nou)
-
     scrie_utilizatori_in_csv(fisier_csv, utilizatori)
+
 
 def afiseaza_toti_pasagerii(fisier_csv):
     """Afisează toți pasagerii din fișierul CSV."""
@@ -55,10 +63,8 @@ def afiseaza_toti_pasagerii(fisier_csv):
     else:
         print("Nu sunt utilizatori in fisier.")
 
-def modifica_utilizator_in_csv(fisier_csv):
-    """Modifica un utilizator existent."""
+def modifica_utilizator_in_csv(fisier_csv, id_de_modificat, nume, prenume, email, icao24, departure_country, destination_country, duration_minutes, over_country=''):
     utilizatori = citeste_utilizatori_din_csv(fisier_csv)
-    id_de_modificat = input("Introdu ID-ul utilizatorului de modificat: ")
     utilizator_de_modificat = None
 
     for utilizator in utilizatori:
@@ -67,28 +73,22 @@ def modifica_utilizator_in_csv(fisier_csv):
             break
 
     if utilizator_de_modificat:
-        print(f"Utilizator gasit: {utilizator_de_modificat}")
-        nume = input(f"Nume (lăsat gol pentru {utilizator_de_modificat['nume']}): ") or utilizator_de_modificat['nume']
-        prenume = input(f"Prenume (lăsat gol pentru {utilizator_de_modificat['prenume']}): ") or utilizator_de_modificat['prenume']
-        email = input(f"Email (lăsat gol pentru {utilizator_de_modificat['email']}): ") or utilizator_de_modificat['email']
-        departure_country = input(f"Țara de plecare (lăsat gol pentru {utilizator_de_modificat['departure_country']}): ") or utilizator_de_modificat['departure_country']
-        over_country = input(f"Avionul zboară deasupra (lăsat gol pentru {utilizator_de_modificat['over_country']}): ") or utilizator_de_modificat['over_country']
-        duration_minutes = input(f"Durata zborului (lăsat gol pentru {utilizator_de_modificat['duration_minutes']}): ") or utilizator_de_modificat['duration_minutes']
-
         utilizator_de_modificat.update({
             "nume": nume,
             "prenume": prenume,
             "email": email,
+            "icao24": icao24,
             "departure_country": departure_country,
-            "over_country": over_country,  # Folosim 'over_country'
-            "duration_minutes": duration_minutes
+            "destination_country": destination_country,
+            "duration_minutes": duration_minutes,
+            "over_country": over_country  # Actualizează și acest câmp
         })
 
         scrie_utilizatori_in_csv(fisier_csv, utilizatori)
-
-        print("Utilizatorul a fost modificat cu succes!")
+        return True
     else:
-        print("Nu s-a găsit utilizatorul cu acest ID.")
+        return False
+
 
 def sterge_utilizator_din_csv(fisier_csv, id_de_sters):
     # Logica de ștergere a utilizatorului
