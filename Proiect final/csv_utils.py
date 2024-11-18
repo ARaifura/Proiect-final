@@ -1,5 +1,5 @@
-import csv
-import requests
+# import csv
+# import requests
 
 def citeste_utilizatori_din_csv(fisier_csv):
     utilizatori = []

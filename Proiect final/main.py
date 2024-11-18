@@ -4,6 +4,7 @@ from csv_utils import citeste_utilizatori_din_csv, adauga_utilizator_in_csv, afi
 
 from flight_data import get_flight_data
 
+
 class Application:
     def __init__(self, root, fisier_csv):
         self.root = root
